@@ -157,8 +157,10 @@ http.createServer(function(req, res) {
         var body = "<ul>";
         var files = fs.readdirSync(SRC_DIR).forEach(function(f) {
             var fp = path.parse(f);
+            if(fp.ext != ".md") return;
             body += `<li>item&nbsp;<a href='item.md'>Markdown</a>
-                | <a href='item.html'>HTML</a> | <a href='item.pdf'>PDF</a></li>`.replace(/item/g, fp.name);
+                | <a href='item.html'>HTML</a> | <a href='item.pdf'>PDF</a>
+                | <a href='item.slide'>Slides</a></li>`.replace(/item/g, fp.name);
         });
         body += "</ul>";
         res.writeHead(200, {'Content-Type': 'text/html'});
