@@ -1,0 +1,43 @@
+{
+    "port": 8080,
+    "path": {
+        "assets": "./assets",
+        "images": "./img"
+    },
+    "pdf": {
+        "header": {
+            "height": "15mm",
+            "text": "",
+            "style": "font-family:monospace;text-align:center;color: #777;font-size: 12px;"
+        },
+        "footer": {
+            "height": "10mm",
+            "style": "font-family:monospace;text-align:right;color: #777;font-size: 12px;",
+            "text": ""
+        },
+        "border": {
+            "top": "5mm",
+            "right": "5mm",
+            "bottom": "5mm",
+            "left": "5mm"
+        }
+    },
+    "slide": {
+        "header": {
+            "height": "15mm",
+            "text": "",
+            "style": "font-family:monospace;text-align:center;color: #777;font-size: 12px;"
+        },
+        "footer": {
+            "height": "15mm",
+            "style": "font-family:monospace;text-align:right;color: #777;font-size: 12px;",
+            "text": ""
+        },
+        "border": {
+            "top": "1mm",
+            "right": "1mm",
+            "bottom": "1mm",
+            "left": "1mm"
+        }
+    }
+}
