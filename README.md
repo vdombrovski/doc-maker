@@ -9,7 +9,10 @@ This tool will serve your markdown documents in different formats. These include
 Setup
 ---
 ```sh
-yum install nodejs bzip2 -y
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.0/install.sh | bash
+bash
+nvm install 12.0.0
+nvm use 12.0.0
 npm i
 cp config.sample.json config.json
 node ./index.js [path to markdown source files]
