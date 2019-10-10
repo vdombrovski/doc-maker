@@ -9,7 +9,7 @@ This tool will serve your markdown documents in different formats. These include
 Setup
 ---
 ```sh
-yum install nodejs
+yum install nodejs bzip2 -y
 npm i
 cp config.sample.json config.json
 node ./index.js [path to markdown source files]

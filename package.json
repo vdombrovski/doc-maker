@@ -1,0 +1,25 @@
+{
+  "name": "doc-maker",
+  "version": "1.0.0",
+  "description": "Doc-maker: a tool to easily create and serve styled pdf and html files ===",
+  "main": "index.js",
+  "dependencies": {
+    "highlight.js": "^9.15.10",
+    "html-pdf": "^2.2.0",
+    "marked": "^0.7.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vdombrovski/doc-maker.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vdombrovski/doc-maker/issues"
+  },
+  "homepage": "https://github.com/vdombrovski/doc-maker#readme"
+}
