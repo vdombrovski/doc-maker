@@ -41,9 +41,24 @@ if (process.argv.length != 3) {
 const SRC_DIR = path.resolve(process.argv[2]);
 const CONFIG = loadConfig();
 const ASSET_DIR = path.resolve(CONFIG.path.assets);
-const IMG_DIR = path.resolve(CONFIG.path.images);
+// const IMG_DIR = path.resolve(CONFIG.path.images);
+const IMG_DIR = path.join(SRC_DIR, "img/")
+const TARGET_ASSET_DIR = path.join(SRC_DIR, ".assets")
+
+try {
+    fs.mkdirSync(TARGET_ASSET_DIR)
+} catch(e) {}
+
+
+var files = fs.readdirSync(ASSET_DIR).forEach(function(f) {
+    try {
+        fs.symlinkSync(path.join(ASSET_DIR, f), path.join(TARGET_ASSET_DIR, f))
+    } catch(e) {}
+});
+
+
 const PDF_CONFIG = {
-    base: "file://" + ASSET_DIR + "/",
+    base: "file://" + TARGET_ASSET_DIR + "/",
     border: CONFIG.pdf.border,
     paginationOffset: 1,
     header: {
@@ -100,9 +115,19 @@ function isHeader(line, primary) {
     return line.startsWith("<h3");
 }
 
+
+
 function html(title, body, slideMode) {
+    var toc = [];
+    var page = 1;
     var plate = readFile(ASSET_DIR + "/plate.html");
     if(!plate) return null;
+
+    if(slideMode) {
+        plate = plate.replace("[STYLEPATH]", "./styles-slides.css")
+    } else {
+        plate = plate.replace("[STYLEPATH]", "./styles-pdf.css")
+    }
 
     var lines = body.split('\n');
     var buf = []
@@ -122,11 +147,22 @@ function html(title, body, slideMode) {
             lastHeaderPrim = line;
             needsHeaderPrim = false;
             needsHeaderSec = false;
+            toc.push({
+                "text": line.split(">")[1].split("<")[0],
+                "page": page,
+                "subs": [],
+                "id": line.split("id=\"")[1].split("\"")[0]
+            })
         }
         else {
             if (isHeader(line, false)) {
                 lastHeaderSec = line;
                 needsHeaderSec = false;
+                toc[toc.length - 1].subs.push({
+                    "text": line.split(">")[1].split("<")[0],
+                    "page": page,
+                    "id": line.split("id=\"")[1].split("\"")[0]
+                })
             }
             if(needsHeaderPrim) {
                 if(slideMode)
@@ -139,16 +175,34 @@ function html(title, body, slideMode) {
                 needsHeaderSec = false;
             }
             if (line.match(/={10,}/g)) {
-                var rpl = "<div class='" + ((needsBreak)?"slidebreak":"") + "' style='page-break-after: always;'></div>";
+                var rpl = "<div class='" + ((needsBreak)?"slidebreak":"") + "' style='page-break-after: always;'></div>"
+                + "<div class='pagebreak2'>&nbsp;</div>";
                 line = line.replace(/={10,}/g, rpl);
                 needsHeaderPrim = true;
                 needsHeaderSec = true;
+                page++;
             }
         }
         buf.push(line)
     }
     buf = buf.join("\n")
-    return plate.replace("{{title}}", title).replace("{{body}}", buf);
+    return plate.replace("{{title}}", title).replace("{{body}}", buf).replace("{{ toc }}", generateToc(toc));
+}
+
+function generateToc(toc) {
+    res = ["<ul class='toc'>"]
+    toc.forEach(function(prim) {
+        res.push("<li><a href=\"#" + prim.id + "\">" + prim.text + "</a><span>" + prim.page + "</span></li>")
+        if (prim.subs.length > 0) {
+            res.push("<ul>");
+            prim.subs.forEach(function(sec) {
+                res.push("<li><a href=\"#" + sec.id + "\">" + sec.text + "</a><span>" + sec.page + "</span></li>")
+            });
+            res.push("</ul>");
+        }
+    })
+    res.push("</ul>")
+    return res.join("");
 }
 
 http.createServer(function(req, res) {
