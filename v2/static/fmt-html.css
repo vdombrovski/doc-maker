@@ -8,17 +8,17 @@
 @media print {
   @page {
       margin: 0;
-      zoom: 3;
   }
   body {
       margin: 1.6cm;
   }
+
 }
 
 html, body {
     background: #FFF;
     font-family: "Montserrat", sans-serif;
-    font-size: 12px;
+    font-size: 14px;
     line-height: 1.4;
     color: #333;
     word-wrap: break-word;
@@ -54,7 +54,8 @@ code {
     padding: .1em .2em;
 }
 
-pre code {
+pre {
+    padding: .2em;
     display: block;
     box-shadow: inset -1px -1px 0 rgba(0, 0, 0, .08);
     word-wrap: normal;
@@ -86,7 +87,7 @@ blockquote {
     padding: 14px;
     color: #000;
     border: 0 none;
-    font-size: 12px;
+    font-size: 14px;
     border-left: 4px solid #EEE;
     background-color: #EEE;
     text-align: left;
@@ -206,7 +207,7 @@ h2 {
 }
 
 h3 {
-    font-size: 14px;
+    font-size: 16px;
     font-weight: bold;
     border-bottom: 1px solid #CCC;
     margin-top: 15px;
@@ -214,7 +215,7 @@ h3 {
 }
 
 h4 {
-    font-size: 12px;
+    font-size: 16px;
     font-weight: bold;
     text-decoration: underline;
     margin-top: 20px;
@@ -279,16 +280,16 @@ a:visited {
 .header {
     color: #777;
     vertical-align: middle;
-    font-size: 12px;
+    /* font-size: 12px; */
 }
 
 .footer {
     border-top: 1px solid #EEE;
     padding-top: 5px;
     color: #777;
-    font-size: 80%;
+    /* font-size: 80%; */
     text-align: right;
-    font-size: 12px;
+    /* font-size: 12px; */
 }
 
 .slidebreak {
@@ -361,4 +362,25 @@ img {
 
 label {
     font-size: 10px;
+}
+
+section {
+    page-break-inside:avoid;
+    page-break-after:auto;
+}
+section:before {
+    height: 0.5cm;
+    content: "";
+    display: block;
+    width: 100vw;
+}
+
+h1 + h2 {
+    margin-top: -0.5cm;
+}
+h1 + h3 {
+    margin-top: -0.5cm;
+}
+h2 + h3 {
+    margin-top: -0.5cm;
 }
