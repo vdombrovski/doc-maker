@@ -46,6 +46,7 @@ func processHTML(in []byte, style *chroma.Style) (string) {
             }
             hasContent = false
         } else if strings.HasPrefix(line, "<p>============") {
+            out += "<div style='page-break-after: always;'></div>"
             continue
         } else if !strings.HasPrefix(line, "<br>") && len(line) > 0 {
             hasContent = true
@@ -168,7 +169,7 @@ func generateToc(in []byte) string {
 func main() {
     var source string
     fs := flag.NewFlagSet("", flag.ExitOnError)
-	fs.StringVar(&source, "src", "", "Directory to serve")
+	  fs.StringVar(&source, "src", "", "Directory to serve")
     err := fs.Parse(os.Args[1:])
     if err != nil {
         log.Fatalln(err)
@@ -185,12 +186,13 @@ func main() {
     m := macaron.Classic()
     m.Use(macaron.Static("static", macaron.StaticOptions{Prefix: "static",}))
     m.Use(macaron.Static("pdf-cache", macaron.StaticOptions{Prefix: "output",}))
-    m.Use(macaron.Static(source + "/img", macaron.StaticOptions{Prefix: "img",}))
+    m.Use(macaron.Static(source + "../img", macaron.StaticOptions{Prefix: "img",}))
     m.Use(pongo2.Pongoer())
 
     m.Get("/html/:file", func(ctx *macaron.Context) {
         data, err := ioutil.ReadFile(source + ctx.Params(":file") + ".md")
         if err != nil {
+          log.Println(err)
             ctx.Resp.WriteHeader(404)
             return
         }
@@ -253,7 +255,7 @@ func renderPDF(input string, output string) (error) {
 
     ctx, _ := context.WithTimeout(context.Background(), time.Duration(5)*time.Second)
     log.Println(input)
-    do := exec.CommandContext(ctx, "/usr/bin/chrome",
+    do := exec.CommandContext(ctx, "/usr/bin/google-chrome-stable",
     "--headless",
     "--run-all-compositor-stages-before-draw",
     "--no-margins",
